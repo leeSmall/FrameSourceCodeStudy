@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<bean id="loveService" class="com.study.leesmall.spring.sample.factory.LoveServiceFactory" 
+		factory-method="getLoveServiceFromStaticFactoryMethod" >
+		<property name="combatService" ref="combatService"></property>
+	</bean>
+	
+	<bean id="loveServiceFactory" class="com.study.leesmall.spring.sample.factory.LoveServiceFactory" />
+		
+	<bean id="combatService" factory-bean="loveServiceFactory" 
+		factory-method="getCombatServiceFromMemberFactoryMethod" >
+		<constructor-arg type="int" value="120" />
+		<constructor-arg ref="beanA"></constructor-arg>
+		<constructor-arg><bean id="ssss" class="cccc"></bean></constructor-arg>
+		<constructor-arg><bean class="cccc"></bean></constructor-arg>
+		<constructor-arg><map></map></constructor-arg>
+		<constructor-arg><list></list></constructor-arg>
+	</bean>
+	
+	<bean name="loveService2" class="com.study.leesmall.spring.sample.factory.LoveServiceFactoryBean">
+	</bean>
+	
+	<alias name="combatService" alias="combat"/>
+</beans>
+	
+	
+	

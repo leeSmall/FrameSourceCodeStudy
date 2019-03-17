@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="abean" class="com.sourcecodestudy.spring.sample.ABean" 
+    	init-method="init" destroy-method="destory">
+    	<constructor-arg type="String" value="abean01" />
+    	<constructor-arg ref="cbean" />
+    	<property name="name" value="xxxx" />
+    </bean>
+
+    <bean id="cbean" class="com.sourcecodestudy.spring.sample.CBean">
+    	<constructor-arg type="String" value="cbean01" />
+    </bean>
+</beans>
+	
+	
+	

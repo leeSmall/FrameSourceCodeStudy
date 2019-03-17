@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">  
+	
+	<!-- 加载配置参数 -->
+	<context:property-placeholder location="classpath:com/study/leesmall/spring/sample/tx/application.properties"/>
+	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <property name="locations" value="classpath:com/study/leesmall/spring/sample/tx/application.properties"/>
+	</bean> -->
+	 
+	<!-- 数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" 
+		init-method="init" destroy-method="close"> 
+		<property name="driverClassName" value="${jdbc.driverClassName}" /> 
+		<property name="url" value="${jdbc.url}" /> 
+		<property name="username" value="${jdbc.username}" /> 
+		<property name="password" value="${jdbc.password}" /> 
+		<!-- 配置初始化大小、最小、最大连接数 --> 
+		<property name="initialSize" value="1" /> 
+		<property name="minIdle" value="1" /> 
+		<property name="maxActive" value="10" />
+		<property name="maxWait" value="60000" />
+	 </bean>
+	 
+	 <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" scope="prototype">
+	 	<property name="dataSource" ref="dataSource" />
+	 </bean>
+	
+	<!-- *******************  事务管理配置    begin  ********************************** -->
+	
+	<!-- 配置事务管理器 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+	<!-- 开启注解方式的事务配置支持   （ 注解的方式：@EnableTransactionManagement） -->
+  <!--   <tx:annotation-driven transaction-manager="txManager"/> -->
+	
+	<!-- ********************** 声明式事务配置   ************** -->
+	<!-- 配置事务增强的advice -->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <!-- all methods starting with 'get' are read-only -->
+            <tx:method name="get*" read-only="true" />
+           <!--  other methods use the default transaction settings (see below) -->
+            <tx:method name="*" />
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置事务的AOP切面 --> 
+    <aop:config>
+        <aop:pointcut id="allService" expression="execution(* com.study.leesmall.spring.sample.tx.service.*Service.*(..)))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="allService"/>
+    </aop:config>
+	
+	<!-- *******************  事务管理配置    end  ********************************** -->
+	
+</beans>
+	
+	
+	

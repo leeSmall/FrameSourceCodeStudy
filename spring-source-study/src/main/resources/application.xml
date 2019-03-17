@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<!-- <context:annotation-config />
+	<aop:aspectj-autoproxy /> -->
+	
+<!-- 	<context:component-scan base-package="com.study.leesmall.spring.service">
+		<context:exclude-filter type="annotation" expression=""/>
+		<context:include-filter type="annotation" expression=""/>
+	</context:component-scan> -->
+	
+	<!--静态工厂方式的配置  -->
+	<bean id="loveService" class="com.study.leesmall.spring.sample.factory.LoveServiceFactory" 
+	    factory-method="getLoveServiceFromStaticFactoryMethod">
+	    <property name="combatService" ref="combatService"></property>
+	</bean>
+	<!--非静态工厂方式的配置  -->
+	<bean id="loveServiceFactory" class="com.study.leesmall.spring.sample.factory.LoveServiceFactory"> 
+	</bean>
+		<bean id="combatService" factory-bean="loveServiceFactory" factory-method="getCombatServiceFromMemberFactoryMethod">
+		<constructor-arg type="int" value="60" />
+	</bean>
+	<!--实现FactoryBean的方式的配置  -->
+	<bean name="loveService2" class="com.study.leesmall.spring.sample.factory.LoveServiceFactoryBean"></bean>
+	
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <property name="locations" value="classpath:application.properties"/>
+	</bean>
+	
+	<bean id="combatService" class="com.study.leesmall.spring.service.CombatService">
+		<constructor-arg type="int" value="60" />
+		<constructor-arg index="5" value="999" />
+		
+	</bean>
+	
+	<alias name="combatService" alias="combat"/>
+</beans>
+	
+	
+	

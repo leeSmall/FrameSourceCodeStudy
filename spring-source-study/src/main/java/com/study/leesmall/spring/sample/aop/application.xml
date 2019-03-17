@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<bean id="BeanQ" class="com.study.leesmall.spring.sample.aop.BeanQ" />
+	
+	<bean id="myBeforeAdvice" class="com.study.leesmall.spring.sample.aop.MyBeforeAdvice" />
+	<bean id="yyArroundAdvice" class="com.study.leesmall.spring.sample.aop.MyArroundAdvice" />
+	
+	<aop:config >
+		<aop:pointcut id="doMethods" expression="execution(* com.study.leesmall.spring.sample.aop.*.do*(..))" />
+		<aop:advisor advice-ref="myBeforeAdvice" pointcut-ref="doMethods" />
+		
+		<aop:advisor advice-ref="yyArroundAdvice"
+			pointcut="execution(* com.study.leesmall.spring.sample.aop.*.service*(..))"/>
+	</aop:config>
+	
+	<!-- 配置了包含advice方法的Bean -->
+	<bean id="aspectAdviceBean" class="com.study.leesmall.spring.sample.aop.AspectAdviceBean" />
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="services" expression="execution(* com.study.leesmall.spring.sample.aop.*.service*(..))" />
+		<aop:aspect id="a1" ref="aspectAdviceBean" order="1">
+			<aop:before method="before1" pointcut-ref="doMethods" />
+			<aop:before method="before2" pointcut-ref="doMethods"/>
+			<aop:before method="before3" pointcut="execution(* com.study.leesmall.spring.sample.aop.*.do*(..)) and args(tk,..)"/>
+			<aop:before method="before4" pointcut="execution(* com.study.leesmall.spring.sample.aop.*.do*(..)) and args(tk,ti)"/>
+			<aop:around method="arround1" pointcut-ref="services"/>
+			<aop:around method="arround2" pointcut="execution(* com.study.leesmall.spring.sample.aop.*.service*(..)) and args(name)"/>
+			<aop:after-returning method="afterReturning" pointcut-ref="services" returning="retValue"/>
+			<aop:after-throwing method="afterThrowing" pointcut-ref="services" throwing="e"/>
+			<aop:after method="after" pointcut-ref="services"/>
+		</aop:aspect>
+	</aop:config>
+	
+	
+	<bean id="aspectAdviceBeanUseAnnotation" class="com.study.leesmall.spring.sample.aop.AspectAdviceBeanUseAnnotation" />
+	
+	<aop:aspectj-autoproxy>
+	<!-- 	<aop:include name=""/> -->
+	</aop:aspectj-autoproxy>
+	
+</beans>
+	
+	
+	

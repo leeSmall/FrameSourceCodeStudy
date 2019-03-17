@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+    <!--被增强的目标对象  -->
+	<bean id="BeanQ" class="com.study.leesmall.spring.sample.aop.BeanQ" />
+	
+	<!--AspectJ注解方式实现的AOP  -->
+	<bean id="aspectAdviceBeanUseAnnotation" class="com.study.leesmall.spring.sample.aop.AspectAdviceBeanUseAnnotation" />
+	
+	<!--开启AspectJ注解的支持  -->
+	<aop:aspectj-autoproxy>
+	    <!-- 满足name里面的表达式(bean名称的表达式)的才进行切面的处理 -->
+	    <aop:include name="bean名称的表达式"/>
+	</aop:aspectj-autoproxy>
+	
+</beans>
+	
+	
+	

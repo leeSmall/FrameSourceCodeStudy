@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">  
+	
+	<!-- 加载配置参数 -->
+	<context:property-placeholder location="classpath:com/study/leesmall/spring/sample/jta/application.properties"/>
+	 
+	<!-- xa数据源1 -->
+	<bean id="db1DataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean"
+		init-method="init" destroy-method="close">
+		<!-- 给数据源取个唯一区分的名称 -->
+		<property name="uniqueResourceName" value="mysql/db01" />
+		<!-- 真正使用的 XA DataSource 类名 -->
+		<property name="xaDataSourceClassName"
+			value="com.alibaba.druid.pool.xa.DruidXADataSource" /> 
+		<!-- 数据源连接相关配置参数 这个是指定 xaDataSourceClassName指定的XA数据源类需要的参数-->
+		<property name="xaProperties">
+			<props>
+				<prop key="url">${db1.jdbc.url}</prop>
+				<prop key="username">${jdbc.username}</prop>
+				<prop key="password">${jdbc.password}</prop>
+				<prop key="initialSize">1</prop>
+				<prop key="minIdle">1</prop>
+				<prop key="maxActive">10</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- xa数据源2 -->
+	<bean id="db2DataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean"
+		init-method="init" destroy-method="close">
+		<!-- 给数据源取个唯一区分的名称 -->
+		<property name="uniqueResourceName" value="mysql/db02" />
+		<!-- 真正使用的 XA DataSource 类名 -->
+		<property name="xaDataSourceClassName"
+			value="com.alibaba.druid.pool.xa.DruidXADataSource" />
+		<!-- 数据源连接相关配置参数 这个是指定 xaDataSourceClassName指定的XA数据源类需要的参数 -->
+		<property name="xaProperties">
+			<props>
+				<prop key="url">${db2.jdbc.url}</prop>
+				<prop key="username">${jdbc.username}</prop>
+				<prop key="password">${jdbc.password}</prop>
+				<prop key="initialSize">1</prop>
+				<prop key="minIdle">1</prop>
+				<prop key="maxActive">10</prop>
+			</props>
+		</property>
+	</bean>
+	 
+	 <bean id="jdbcTemplate1" class="org.springframework.jdbc.core.JdbcTemplate" scope="prototype">
+	 	<property name="dataSource" ref="db1DataSource" />
+	 </bean>
+	 
+	 <bean id="jdbcTemplate2" class="org.springframework.jdbc.core.JdbcTemplate" scope="prototype">
+	 	<property name="dataSource" ref="db2DataSource" />
+	 </bean>
+	
+	<!-- *******************  atomikos jta 事务管理配置    begin  ********************************** -->
+	<!-- UserTransactionServiceImp  -->
+	<bean id="userTransactionService"  
+	  class="com.atomikos.icatch.config.UserTransactionServiceImp"  
+	  init-method="init" destroy-method="shutdownForce"> 
+	    <constructor-arg> 
+	        <!-- IMPORTANT: specify all Atomikos properties here --> 
+	        <props> 
+	            <prop key="com.atomikos.icatch.service"> 
+	              com.atomikos.icatch.standalone.UserTransactionServiceFactory 
+	            </prop>
+	            <!-- 事务日志存放地址参数 -->
+	            <prop key="com.atomikos.icatch.log_base_name">jtalog</prop>
+	            <prop key="com.atomikos.icatch.log_base_dir">f:/test</prop>
+	        </props> 
+	    </constructor-arg> 
+	</bean> 
+	 
+	<!-- 配置TransactionManager  AtomikosTransactionManager --> 
+	<bean id="AtomikosTransactionManager"  
+	      class="com.atomikos.icatch.jta.UserTransactionManager"  
+	      init-method="init" destroy-method="close"  
+	      depends-on="userTransactionService">  
+	   <!-- IMPORTANT: disable startup because the userTransactionService above does this --> 
+	   <property name="startupTransactionService" value="false"/> 	 
+	   <!--  when close is called,should we force transactions to terminate or not? --> 
+	   <property name="forceShutdown" value="false" /> 
+	</bean> 
+	 
+	<!--  配置 UserTransaction -->  
+	<bean id="AtomikosUserTransaction"  
+	      class="com.atomikos.icatch.jta.UserTransactionImp"   
+	      depends-on="userTransactionService"> 
+	   <!-- 默认是事务超时时长 300秒 -->
+	   <property name="transactionTimeout" value="300" /> 
+	</bean> 
+	 
+	<!--  配置jta事务管理器，使用 Atomikos的 TransactionManager、UserTransaction --> 
+	<bean id="JtaTransactionManager"  
+	      class="org.springframework.transaction.jta.JtaTransactionManager"  
+	      depends-on="userTransactionService"> 
+	   <property name="transactionManager" ref="AtomikosTransactionManager" /> 
+	   <property name="userTransaction" ref="AtomikosUserTransaction" /> 
+	</bean>
+	
+	<!-- *******************  事务管理配置    end  ********************************** -->
+	
+</beans>
+	
+	
+	

@@ -1,0 +1,107 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.study</groupId>
+	<artifactId>spring-source-study</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>spring Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		    <version>5.1.3.RELEASE</version>
+		</dependency>		
+<!-- 		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-tx</artifactId>
+		    <version>5.1.3.RELEASE</version>
+		</dependency>	 -->
+	<!-- 	<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-jdbc</artifactId>
+		    <version>5.1.3.RELEASE</version>
+		</dependency> -->
+		
+		<!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>druid</artifactId> 
+		    <version>1.0.28</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+	<!-- 	<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.47</version>
+		</dependency> -->
+		
+	<!-- 	<dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-context-indexer</artifactId>
+	        <version>5.1.3.RELEASE</version>
+	        <optional>true</optional>
+	    </dependency> -->
+	    
+	    <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+		<dependency>
+		    <groupId>org.aspectj</groupId>
+		    <artifactId>aspectjweaver</artifactId>
+		    <version>1.9.1</version>
+		</dependency>
+		<!-- log4j2 -->
+		<!-- <dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.9.1</version>
+		</dependency> -->
+		
+		<!-- jta api -->
+		<!-- <dependency>
+		    <groupId>javax.transaction</groupId>
+		    <artifactId>javax.transaction-api</artifactId>
+		    <version>1.3</version>
+		</dependency> -->
+		<!-- atomikos 数据库的TM组件 -->	
+		<!-- <dependency>
+		    <groupId>com.atomikos</groupId>
+		    <artifactId>transactions-jdbc</artifactId>
+		    <version>4.0.6</version>
+		</dependency> -->
+		<!-- atomikos JMS 有MQ需要事务管理时加入  -->	
+		<!-- <dependency>
+		    <groupId>com.atomikos</groupId>
+		    <artifactId>transactions-jms</artifactId>
+		    <version>4.0.6</version>
+		</dependency> -->
+		
+				
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jta-atomikos -->
+		<!-- <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+		    <version>2.1.1.RELEASE</version>
+		</dependency> -->
+	</dependencies>
+	<build>
+		<finalName>spring-source-study</finalName>
+	</build>
+</project>
